@@ -1,51 +1,67 @@
 #include <iostream>
 #include <iomanip>
-#include <cstdlib>  
+#include <cstdlib>
+#include <sstream>
+#include <vector>
 
 using namespace std;
 
-int main(int argc, char *argv[]) {
+int main() {
     int *pa, *pb, i, temp;
-    int n;
+    int n = 0;
+    vector<int> nums;
 
     
-    if (argc > 1) {
-        n = argc - 1;
-        pa = new int[n];
-        for (i = 0; i < n; i++) {
-            pa[i] = atoi(argv[i+1]);
+    char* var_env = getenv("var");
+    if (var_env != nullptr) {
+        
+        stringstream ss(var_env);
+        int val;
+        while (ss >> val) {
+            nums.push_back(val);
         }
+        n = nums.size();
     } else {
+        
         cin >> n;
-        pa = new int[n];
         for (i = 0; i < n; i++) {
-            cin >> pa[i];
+            int val;
+            cin >> val;
+            nums.push_back(val);
         }
     }
 
+    
+    pa = new int[n];
+    for (i = 0; i < n; i++) {
+        pa[i] = nums[i];
+    }
+
+    
     cout << "Original: ";
     for (i = 0; i < n; i++) {
         cout << setw(3) << pa[i];
     }
     cout << endl;
 
+    
     pb = pa + (n - 1);
-    for (i = 0; i < n/2; i++) {
-        temp = *pa;
-        *pa = *pb;
+    int *p = pa;
+    for (i = 0; i < n / 2; i++) {
+        temp = *p;
+        *p = *pb;
         *pb = temp;
-        pa++;
+        p++;
         pb--;
     }
 
     cout << "Reversed: ";
-
-    pa = pa - (n/2);
     for (i = 0; i < n; i++) {
         cout << setw(3) << pa[i];
     }
     cout << endl;
 
+    
     delete[] pa;
     return 0;
 }
